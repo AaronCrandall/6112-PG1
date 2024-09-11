@@ -38,6 +38,7 @@ const Record = (props) => (
 
 export default function RecordList() {
   const [records, setRecords] = useState([]);
+  const [allChecked, setAllChecked] = useState(false);
   const [filteredRecords, setFilterredRecords] = useState([]);
   const [filters, setFilters] = useState({
     intern: false,
