@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {FaFilter } from "react-icons/fa";
 
 //ADDED CHECK BOX
 const Record = (props) => (
@@ -46,8 +47,40 @@ const Record = (props) => (
 
 export default function RecordList() {
   const [records, setRecords] = useState([]);
-  //NEW WAY OF USING CHECK BOXES
   const [allChecked, setAllChecked] = useState(false);
+  const [filteredRecords, setFilterredRecords] = useState([]);
+  const [filters, setFilters] = useState({
+    intern: false,
+    junior: false,
+    senior: false,
+  });
+  const [openFilterDropDown, setOpenFilterDropDown] = useState(false);
+  const handleFilterDropDown = () => {
+    setOpenFilterDropDown(!openFilterDropDown);
+  };
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: checked,
+    }));
+  };
+  const handleFormSubmit = (event)=>{
+    event.preventDefault()
+    const selectedFilters = Object.keys(filters).filter((key) => filters[key]);
+    console.log(selectedFilters);
+    if (selectedFilters.length === 0) {
+      setFilterredRecords(records);
+    } else {
+      const temp = records.filter((record) =>
+        selectedFilters.includes(record.level.toLowerCase())
+      );
+      setFilterredRecords(temp);
+    }
+    setOpenFilterDropDown(false);
+  }
+
+  useEffect(()=>{setFilterredRecords(records)},[records])
 
   // This method fetches the records from the database.
   useEffect(() => {
@@ -165,6 +198,44 @@ export default function RecordList() {
                 </th>
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Level
+                  <button onClick={handleFilterDropDown}>
+                    <FaFilter size={14} />
+                  </button>
+                  {openFilterDropDown && (
+                    <form onSubmit={handleFormSubmit} className="absolute flex flex-col gap-2 right-4 shadow-lg top-7 border border-[#eee] p-2 z-10 w-32 bg-white rounded-md ">
+                      <div className=" flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          name="intern"
+                          checked={filters.intern}
+                          onChange={handleCheckboxChange}
+                        />
+
+                        <label htmlFor="intern">Intern</label>
+                      </div>
+                      <div className=" flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          name="junior"
+                          checked={filters.junior}
+                          onChange={handleCheckboxChange}
+                        />
+
+                        <label htmlFor="junior">Junior</label>
+                      </div>
+                      <div className=" flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          name="senior"
+                          checked={filters.senior}
+                          onChange={handleCheckboxChange}
+                        />
+
+                        <label htmlFor="senior">Senior</label>
+                      </div>
+                      <button type="submit" className="bg-blue-400 text-white rounded-md px-2 py-1 cursor-pointer w-fit">Apply</button>
+                    </form>
+                  )}
                 </th>
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Action
