@@ -96,4 +96,29 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+//ADD IN METHOD TO DELETE MULTIPLE ENTRIES
+router.delete("/bulkdelete/:ids", async (req, res) => {
+  try {
+    let allIds = req.params.ids;
+    let deleteIds = allIds.split("-");
+    deleteIds.pop();
+
+    //Convert to array of ObjectIDs
+    let allObjectIds = []
+
+    deleteIds.forEach((entry) => {
+      let query = new ObjectId(entry);
+      allObjectIds.push(query);
+    });
+
+    const collection = db.collection("records");
+    let result = await collection.deleteMany({_id: {$in: allObjectIds}});
+  
+    res.send(result).status(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting records");
+  }
+});
+
 export default router;
