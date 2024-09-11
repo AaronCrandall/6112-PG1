@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.topnav input[type=search] {
+    float: left;
+    padding: 6px;
+    margin-top: 8px;
+    margin-left: 10px;
+    font-size: 17px;
+    width: 240px;
+    border: solid lightgray;
+    border-radius: 10px;
+    outline: none;
+  }
