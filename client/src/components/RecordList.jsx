@@ -63,19 +63,6 @@ export default function RecordList() {
     setRecords(newRecords);
   }
 
-  //NEW FUNCTION TO UPDATE CHECK BOXES
-  /*function filterRecords(name, position) {
-    let filteredRecords = [];
-
-      records.forEach((record) => {
-        if (record.name.toLowerCase().includes(searchTerm.toLowerCase()) || record.position.toLowerCase().includes(searchTerm.toLowerCase())) {
-        }
-        filteredRecords.push(record);
-      })
-      setRecords(filteredRecords);
-  }*/
-
-
   // This method will map out the records on the table
   function recordList() {
     if (e == false) {
