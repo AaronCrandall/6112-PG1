@@ -160,7 +160,7 @@ export default function RecordList() {
   // This method will map out the records on the table
   function recordList() {
     if (e === false) {
-      return records.map((record) => {
+      return filteredRecords.map((record) => {
         return (
           <Record
             record={record}
