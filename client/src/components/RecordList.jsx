@@ -56,7 +56,7 @@ export default function RecordList() {
   });
   const [openFilterDropDown, setOpenFilterDropDown] = useState(false);
 
-  // useEffect(()=>{setFilterredRecords(records)},[records])
+  // useEffect(()=>{setPositionRecords(records)},[records])
 
   // This method fetches the records from the database.
   useEffect(() => {
@@ -73,7 +73,6 @@ export default function RecordList() {
         record.checked = false;
       })
       setRecords(records);
-      console.log(records);
     }
     getRecords();
     return;
@@ -98,21 +97,20 @@ export default function RecordList() {
       [name]: checked,
     }));
   };
-  const handleFormSubmit = (event)=>{
-    event.preventDefault()
+  const handleFormSubmit = (event)=> {
+    // event.preventDefault()
+    setPositionRecords([]);
     const selectedFilters = Object.keys(filters).filter((key) => filters[key]);
-    console.log(selectedFilters);
     if (selectedFilters.length === 0) {
-      setPositionRecords(records);
-    } else {
-      const temp = records.filter((record) =>
-        selectedFilters.includes(record.level.toLowerCase())
-      );
-      setPositionRecords(temp);
-      
+      return;
     }
-    setRecords(positionRecords);
-    setOpenFilterDropDown(false);
+    let newPositionRecords = [];
+    records.forEach((record) => {
+      if (selectedFilters.includes(record.level.toLowerCase())) {
+        newPositionRecords.push(record);
+      }
+    })
+    setPositionRecords(newPositionRecords);
   }
 
   //NEW FUNCTION TO UPDATE CHECK BOXES
@@ -159,7 +157,19 @@ export default function RecordList() {
   //ADD IN UPDATE CHECKBOX
   // This method will map out the records on the table
   function recordList() {
-    if (e === false) {
+    if (positionRecords.length > 0) {
+      return positionRecords.map((record) => {
+        return (
+          <Record
+            record={record}
+            updateCheckbox={() => updateCheckbox(record._id)}
+            deleteRecord={() => deleteRecord(record._id)}
+            key={record._id}
+          />
+        );
+      });
+    }
+    else if (e === false) {
       return records.map((record) => {
         return (
           <Record
@@ -175,6 +185,7 @@ export default function RecordList() {
         return (
           <Record
             record={record}
+            updateCheckbox={() => updateCheckbox(record._id)}
             deleteRecord={() => deleteRecord(record._id)}
             key={record._id}
           />
@@ -274,7 +285,7 @@ export default function RecordList() {
 
                         <label htmlFor="senior">Senior</label>
                       </div>
-                      <button type="submit" className="bg-blue-400 text-white rounded-md px-2 py-1 cursor-pointer w-fit">Apply</button>
+                      <button type="button" onClick={() => {handleFormSubmit()}} className="bg-blue-400 text-white rounded-md px-2 py-1 cursor-pointer w-fit">Apply</button>
                     </form>
                   )}
                 </th>
@@ -295,3 +306,4 @@ export default function RecordList() {
     </>
   );
 }
+
